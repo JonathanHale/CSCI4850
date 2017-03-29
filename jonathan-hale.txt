@@ -1,0 +1,903 @@
+# Team Information:
+#   Jonathan Hale:
+#     Responsible for all tables
+
+# Create Tables:
+
+create table Organization (
+  ID int primary key,
+  Name varchar(50),
+  NumOfTeams int
+);
+create table Team (
+  ID int primary key,
+  Name varchar(50),
+  OrgID int
+);
+create table Player (
+  ID int key,
+  Email varchar(50),
+  TeamID int
+);
+create table OrgStats (
+  Rank int,
+  CreateDate date,
+  OrgID int
+);
+create table TeamStats (
+  Rank int,
+  MatchesWon int,
+  MatchesLost int,
+  TeamID int
+);
+create table PlayerStats (
+  Rank int,
+  CreateDate date,
+  PlayerID int
+);
+create table Characters (
+  ID int primary key,
+  Name varchar(50),
+  class varchar(15),
+  PlayerID int
+);
+create table CharacterStats(
+  Rank int,
+  ShotsFired int,
+  Hits int,
+  Misses int,
+  Kills int,
+  Deaths int,
+  CharID int
+);
+create table Game (
+  team1ID int,
+  Team2ID int,
+  WinnerID int
+);
+create table Created(
+  playerID int not null,
+  characterID int not null,
+  constraint pk_created primary key (playerID,characterID)
+);
+create table Joins(
+  playerID int not null,
+  teamID int not null,
+  constraint pk_join primary key (playerID,teamID)
+);
+create table Owns(
+  orgID int not null,
+  teamID int not null,
+  constraint pk_own primary key (orgID,teamID)
+);
+create table CompeteIn(
+  team1ID int not null,
+  team2ID int not null,
+  constraint pk_compete primary key (team1ID,team2ID)
+);
+create table OrgGenerates(
+  orgID int not null,
+  ID int not null,
+  constraint pk_orgGen primary key (orgID,ID)
+);
+create table TeamGenerates(
+  teamID int not null,
+  ID int not null,
+  constraint pk_TeamGen primary key (TeamID,ID)
+);
+create table PlayerGenerates(
+  playerID int not null,
+  ID int not null,
+  constraint pk_PlayerGen primary key (playerID,ID)
+);
+create table CharGenerates(
+  CharID int not null,
+  ID int not null,
+  constraint pk_charGen primary key (CharID,ID)
+);
+
+# Foreign Keys:
+
+alter table Team add constraint fk_team foreign key (OrgID)
+references Organization(ID) on delete cascade on update cascade;
+alter table Player add constraint fk_player foreign key (TeamID)
+references Team(ID) on delete cascade on update cascade;
+alter table OrgStats add constraint fk_stats foreign key (OrgID)
+references Organization(ID) on delete cascade on update cascade;
+alter table TeamStats add constraint fk_teamstats foreign key (teamID)
+references Team(ID) on delete cascade on update cascade;
+alter table PlayerStats add constraint fk_playerstats foreign key (PlayerID)
+references Player(ID) on delete cascade on update cascade;
+alter table Characters add constraint fk_charplayer foreign key (PlayerID)
+references Player(ID) on delete cascade on update cascade;
+alter table CharacterStats add constraint fk_char foreign key (charID)
+references Characters(ID) on delete cascade on update cascade;
+alter table Game add constraint fk_game foreign key (team1ID)
+references Team(ID) on delete cascade on update cascade;
+alter table Game add constraint fk_game2 foreign key (team1ID)
+references Team(ID) on delete cascade on update cascade;
+alter table Created add constraint fk_created foreign key(playerID)
+references Player(ID) on delete cascade on update cascade;
+alter table Created add constraint fk_created2 foreign key(characterID)
+references Characters(ID) on delete cascade on update cascade;
+alter table Joins add constraint fk_join foreign key(playerID)
+references Player(ID) on delete cascade on update cascade;
+alter table Joins add constraint fk_join2 foreign key(teamID)
+references Team(ID) on delete cascade on update cascade;
+alter table Owns add constraint fk_own foreign key(orgID)
+references Organization(ID) on delete cascade on update cascade;
+alter table Owns add constraint fk_own2 foreign key(teamID)
+references Team(ID) on delete cascade on update cascade;
+alter table CompeteIn add constraint fk_compete foreign key(team1ID)
+references Team(ID) on delete cascade on update cascade;
+alter table CompeteIn add constraint fk_compete2 foreign key(team2ID)
+references Team(ID) on delete cascade on update cascade;
+alter table OrgGenerates add constraint fk_orgGen foreign key(orgID)
+references Organization(ID) on delete cascade on update cascade;
+alter table OrgGenerates add constraint fk_orgGen2 foreign key(ID)
+references OrgStats(OrgID) on delete cascade on update cascade;
+alter table TeamGenerates add constraint fk_teamGen foreign key(teamID)
+references Team(ID) on delete cascade on update cascade;
+alter table TeamGenerates add constraint fk_teamGen2 foreign key(ID)
+references TeamStats(TeamID) on delete cascade on update cascade;
+alter table PlayerGenerates add constraint fk_playerGen foreign key(playerID)
+references Player(ID) on delete cascade on update cascade;
+alter table PlayerGenerates add constraint fk_playerGen2 foreign key(ID)
+references PlayerStats(PlayerID) on delete cascade on update cascade;
+alter table CharGenerates add constraint fk_charGen foreign key(CharID)
+references Characters(ID) on delete cascade on update cascade;
+alter table CharGenerates add constraint fk_charGen2 foreign key(ID)
+references CharacterStats(CharID) on delete cascade on update cascade;
+
+# Tuple Creation:
+insert into Organization (ID,Name,NumOfTeams) values(0,'Fuzzies',2);
+insert into Organization (ID,Name,NumOfTeams) values(1,'Beekers',2);
+insert into Organization (ID,Name,NumOfTeams) values(2,'NOMS',1);
+insert into Organization (ID,Name,NumOfTeams) values(3,'Orfs',1);
+insert into Organization (ID,Name,NumOfTeams) values(4,'BreakNecks',1);
+insert into Organization (ID,Name,NumOfTeams) values(5,'Bears',1);
+insert into Organization (ID,Name,NumOfTeams) values(6,'Cobras',1);
+insert into Organization (ID,Name,NumOfTeams) values(7,'Wendigos',3);
+insert into Organization (ID,Name,NumOfTeams) values(8,'Dingos',2);
+insert into Organization (ID,Name,NumOfTeams) values(9,'Mossly',1);
+
+insert into Team (ID,Name,OrgID) values(0,'Tigers',9);
+insert into Team (ID,Name,OrgID) values(1,'Badgers',4);
+insert into Team (ID,Name,OrgID) values(2,'Elite',6);
+insert into Team (ID,Name,OrgID) values(3,'Munkshots',5);
+insert into Team (ID,Name,OrgID) values(4,'Camshaft',8);
+insert into Team (ID,Name,OrgID) values(5,'OOMOO',0);
+insert into Team (ID,Name,OrgID) values(6,'Optic',8);
+insert into Team (ID,Name,OrgID) values(7,'Mesmer',7);
+insert into Team (ID,Name,OrgID) values(9,'XX',3);
+insert into Team (ID,Name,OrgID) values(8,'Thievery Corporation',1);
+insert into Team (ID,Name,OrgID) values(10,'Radiohead',7);
+insert into Team (ID,Name,OrgID) values(11,'Korn',1);
+insert into Team (ID,Name,OrgID) values(12,'Murder by Death',2);
+insert into Team (ID,Name,OrgID) values(13,'Tunnel Snakes',7);
+insert into Team (ID,Name,OrgID) values(14,'Bottle Rockets',0);
+
+insert into Player (ID,Email,TeamID) values(0,'10000062jamse@email.com',0);
+insert into Player (ID,Email,TeamID) values(1,'1@email.com',0);
+insert into Player (ID,Email,TeamID) values(2,'2@email.com',0);
+insert into Player (ID,Email,TeamID) values(3,'3@email.com',0);
+insert into Player (ID,Email,TeamID) values(4,'4@email.com',0);
+insert into Player (ID,Email,TeamID) values(5,'15@email.com',1);
+insert into Player (ID,Email,TeamID) values(6,'16@email.com',1);
+insert into Player (ID,Email,TeamID) values(7,'17@email.com',1);
+insert into Player (ID,Email,TeamID) values(8,'18@email.com',1);
+insert into Player (ID,Email,TeamID) values(9,'19@email.com',1);
+insert into Player (ID,Email,TeamID) values(10,'10@email.com',2);
+insert into Player (ID,Email,TeamID) values(11,'111@email.com',2);
+insert into Player (ID,Email,TeamID) values(12,'112@email.com',2);
+insert into Player (ID,Email,TeamID) values(13,'113@email.com',2);
+insert into Player (ID,Email,TeamID) values(14,'114@email.com',2);
+insert into Player (ID,Email,TeamID) values(15,'115@email.com',3);
+insert into Player (ID,Email,TeamID) values(16,'116@email.com',3);
+insert into Player (ID,Email,TeamID) values(17,'117@email.com',3);
+insert into Player (ID,Email,TeamID) values(18,'118@email.com',3);
+insert into Player (ID,Email,TeamID) values(19,'119@email.com',3);
+insert into Player (ID,Email,TeamID) values(20,'120@email.com',4);
+insert into Player (ID,Email,TeamID) values(21,'121@email.com',4);
+insert into Player (ID,Email,TeamID) values(22,'122@email.com',4);
+insert into Player (ID,Email,TeamID) values(23,'123@email.com',4);
+insert into Player (ID,Email,TeamID) values(24,'152@email.com',4);
+insert into Player (ID,Email,TeamID) values(25,'125@email.com',5);
+insert into Player (ID,Email,TeamID) values(26,'126@email.com',5);
+insert into Player (ID,Email,TeamID) values(27,'117@email.com',5);
+insert into Player (ID,Email,TeamID) values(28,'128@email.com',5);
+insert into Player (ID,Email,TeamID) values(29,'129@email.com',5);
+insert into Player (ID,Email,TeamID) values(30,'130@email.com',6);
+insert into Player (ID,Email,TeamID) values(31,'131@email.com',6);
+insert into Player (ID,Email,TeamID) values(32,'132@email.com',6);
+insert into Player (ID,Email,TeamID) values(33,'133@email.com',6);
+insert into Player (ID,Email,TeamID) values(34,'134@email.com',6);
+insert into Player (ID,Email,TeamID) values(35,'135@email.com',7);
+insert into Player (ID,Email,TeamID) values(36,'136@email.com',7);
+insert into Player (ID,Email,TeamID) values(37,'137@email.com',7);
+insert into Player (ID,Email,TeamID) values(38,'138@email.com',7);
+insert into Player (ID,Email,TeamID) values(39,'139@email.com',7);
+insert into Player (ID,Email,TeamID) values(40,'140@email.com',8);
+insert into Player (ID,Email,TeamID) values(41,'141@email.com',8);
+insert into Player (ID,Email,TeamID) values(42,'142@email.com',8);
+insert into Player (ID,Email,TeamID) values(43,'143@email.com',8);
+insert into Player (ID,Email,TeamID) values(44,'144@email.com',8);
+insert into Player (ID,Email,TeamID) values(45,'145@email.com',9);
+insert into Player (ID,Email,TeamID) values(46,'146@email.com',9);
+insert into Player (ID,Email,TeamID) values(47,'147@email.com',9);
+insert into Player (ID,Email,TeamID) values(48,'148@email.com',9);
+insert into Player (ID,Email,TeamID) values(49,'149@email.com',9);
+insert into Player (ID,Email,TeamID) values(50,'152@email.com',10);
+insert into Player (ID,Email,TeamID) values(51,'151@email.com',10);
+insert into Player (ID,Email,TeamID) values(52,'152@email.com',10);
+insert into Player (ID,Email,TeamID) values(53,'153@email.com',10);
+insert into Player (ID,Email,TeamID) values(54,'154@email.com',10);
+insert into Player (ID,Email,TeamID) values(55,'155@email.com',11);
+insert into Player (ID,Email,TeamID) values(56,'56@email.com',11);
+insert into Player (ID,Email,TeamID) values(57,'57@email.com',11);
+insert into Player (ID,Email,TeamID) values(58,'58@email.com',11);
+insert into Player (ID,Email,TeamID) values(59,'59@email.com',11);
+insert into Player (ID,Email,TeamID) values(60,'60@email.com',12);
+insert into Player (ID,Email,TeamID) values(61,'61@email.com',12);
+insert into Player (ID,Email,TeamID) values(62,'62@email.com',12);
+insert into Player (ID,Email,TeamID) values(63,'63@email.com',12);
+insert into Player (ID,Email,TeamID) values(64,'64@email.com',12);
+insert into Player (ID,Email,TeamID) values(65,'65@email.com',13);
+insert into Player (ID,Email,TeamID) values(66,'66@email.com',13);
+insert into Player (ID,Email,TeamID) values(67,'67@email.com',13);
+insert into Player (ID,Email,TeamID) values(68,'68@email.com',13);
+insert into Player (ID,Email,TeamID) values(69,'69@email.com',13);
+insert into Player (ID,Email,TeamID) values(70,'70@email.com',14);
+insert into Player (ID,Email,TeamID) values(71,'71@email.com',14);
+insert into Player (ID,Email,TeamID) values(72,'72@email.com',14);
+insert into Player (ID,Email,TeamID) values(73,'73@email.com',14);
+insert into Player (ID,Email,TeamID) values(74,'74@email.com',14);
+
+insert into OrgStats (Rank,CreateDate,OrgID) values(1,'2016-03-28',0);
+insert into OrgStats (Rank,CreateDate,OrgID) values(6,'2015-08-28',1);
+insert into OrgStats (Rank,CreateDate,OrgID) values(2,'2016-03-28',2);
+insert into OrgStats (Rank,CreateDate,OrgID) values(9,'2015-08-28',3);
+insert into OrgStats (Rank,CreateDate,OrgID) values(5,'2016-07-28',4);
+insert into OrgStats (Rank,CreateDate,OrgID) values(8,'2015-08-28',5);
+insert into OrgStats (Rank,CreateDate,OrgID) values(7,'2016-03-29',6);
+insert into OrgStats (Rank,CreateDate,OrgID) values(4,'2015-08-23',8);
+insert into OrgStats (Rank,CreateDate,OrgID) values(3,'2017-01-02',7);
+insert into OrgStats (Rank,CreateDate,OrgID) values(0,'2017-01-28',9);
+
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(4,77,3,0);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(4,3,62,1);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(4,26,85,2);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(2,57,43,3);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(2,54,81,4);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(5,9,54,5);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(2,29,38,6);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(5,51,86,7);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(5,36,75,8);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(0,91,67,9);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(3,29,11,10);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(5,69,63,11);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(5,49,40,12);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(5,42,10,13);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(2,11,30,14);
+
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(3,'2017-03-28',0);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(5,'2017-03-28',1);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(1,'2017-03-28',2);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(0,'2017-03-28',3);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(5,'2017-03-28',4);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(2,'2017-03-28',5);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(4,'2017-03-28',6);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(0,'2017-03-28',7);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(2,'2017-03-28',8);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(3,'2017-03-28',9);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(1,'2017-03-28',10);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(2,'2017-03-28',11);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(5,'2017-03-28',12);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(4,'2017-03-28',13);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(1,'2017-03-28',14);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(4,'2017-03-28',15);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(0,'2017-03-28',16);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(5,'2017-03-28',17);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(1,'2017-03-28',18);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(2,'2017-03-28',19);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(3,'2017-03-28',20);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(0,'2017-03-28',21);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(2,'2017-03-28',22);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(3,'2017-03-28',23);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(1,'2017-03-28',24);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(0,'2017-03-28',25);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(1,'2017-03-28',26);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(3,'2017-03-28',27);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(5,'2017-03-28',28);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(4,'2017-03-28',29);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(5,'2017-03-28',30);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(0,'2017-03-28',31);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(2,'2017-03-28',32);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(1,'2017-03-28',33);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(4,'2017-03-28',34);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(4,'2017-03-28',35);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(0,'2017-03-28',36);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(1,'2017-03-28',37);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(4,'2017-03-28',38);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(2,'2017-03-28',39);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(0,'2017-03-28',40);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(0,'2017-03-28',41);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(3,'2017-03-28',42);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(1,'2017-03-28',43);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(3,'2017-03-28',44);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(3,'2017-03-28',45);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(5,'2017-03-28',46);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(3,'2017-03-28',47);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(2,'2017-03-28',48);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(0,'2017-03-28',49);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(0,'2017-03-28',50);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(4,'2017-03-28',51);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(0,'2017-03-28',52);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(2,'2017-03-28',53);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(4,'2017-03-28',54);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(5,'2017-03-28',55);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(0,'2017-03-28',56);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(4,'2017-03-28',57);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(3,'2017-03-28',58);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(2,'2017-03-28',59);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(1,'2017-03-28',60);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(0,'2017-03-28',61);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(5,'2017-03-28',62);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(2,'2017-03-28',63);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(3,'2017-03-28',64);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(0,'2017-03-28',65);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(5,'2017-03-28',66);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(0,'2017-03-28',67);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(5,'2017-03-28',68);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(0,'2017-03-28',69);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(5,'2017-03-28',70);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(1,'2017-03-28',71);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(0,'2017-03-28',72);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(1,'2017-03-28',73);
+insert into PlayerStats (Rank,CreateDate,PlayerID) values(2,'2017-03-28',74);
+
+insert into Characters (ID,Name,class,PlayerID) values(0,'Frank','fighter',0);
+insert into Characters (ID,Name,class,PlayerID) values(1,'Sinatra','support',1);
+insert into Characters (ID,Name,class,PlayerID) values(2,'Homer','fighter',2);
+insert into Characters (ID,Name,class,PlayerID) values(3,'Marge','sniper',3);
+insert into Characters (ID,Name,class,PlayerID) values(4,'Lisa','fighter',4);
+insert into Characters (ID,Name,class,PlayerID) values(5,'Bart','medic',5);
+insert into Characters (ID,Name,class,PlayerID) values(6,'Maggie','fighter',6);
+insert into Characters (ID,Name,class,PlayerID) values(7,'JD','support',7);
+insert into Characters (ID,Name,class,PlayerID) values(8,'Oscar','fighter',8);
+insert into Characters (ID,Name,class,PlayerID) values(9,'Sasha','sniper',9);
+insert into Characters (ID,Name,class,PlayerID) values(10,'Boomer','fighter',10);
+insert into Characters (ID,Name,class,PlayerID) values(11,'Max','support',11);
+insert into Characters (ID,Name,class,PlayerID) values(12,'Sadie','fighter',12);
+insert into Characters (ID,Name,class,PlayerID) values(13,'Leo','support',13);
+insert into Characters (ID,Name,class,PlayerID) values(14,'Karla','fighter',14);
+insert into Characters (ID,Name,class,PlayerID) values(15,'Jon','sniper',15);
+insert into Characters (ID,Name,class,PlayerID) values(16,'Rachel','fighter',16);
+insert into Characters (ID,Name,class,PlayerID) values(17,'Mark','support',17);
+insert into Characters (ID,Name,class,PlayerID) values(18,'Torie','fighter',18);
+insert into Characters (ID,Name,class,PlayerID) values(19,'Kay','support',19);
+insert into Characters (ID,Name,class,PlayerID) values(20,'Andy','fighter',20);
+insert into Characters (ID,Name,class,PlayerID) values(21,'Dylan','sniper',21);
+insert into Characters (ID,Name,class,PlayerID) values(22,'Cody','fighter',22);
+insert into Characters (ID,Name,class,PlayerID) values(23,'Orf','support',23);
+insert into Characters (ID,Name,class,PlayerID) values(24,'Tyler','fighter',24);
+insert into Characters (ID,Name,class,PlayerID) values(25,'Frankfurter','medic',25);
+insert into Characters (ID,Name,class,PlayerID) values(26,'Munster','fighter',26);
+insert into Characters (ID,Name,class,PlayerID) values(27,'Cheeeee','sniper',27);
+insert into Characters (ID,Name,class,PlayerID) values(28,'Wacko','fighter',28);
+insert into Characters (ID,Name,class,PlayerID) values(29,'Yacko','support',29);
+insert into Characters (ID,Name,class,PlayerID) values(30,'Dot','fighter',30);
+insert into Characters (ID,Name,class,PlayerID) values(31,'Einstein','support',31);
+insert into Characters (ID,Name,class,PlayerID) values(32,'Munch','fighter',32);
+insert into Characters (ID,Name,class,PlayerID) values(33,'Keepsake','sniper',33);
+insert into Characters (ID,Name,class,PlayerID) values(34,'wannabe','fighter',34);
+insert into Characters (ID,Name,class,PlayerID) values(35,'medicguy','medic',35);
+insert into Characters (ID,Name,class,PlayerID) values(36,'figherguy','fighter',36);
+insert into Characters (ID,Name,class,PlayerID) values(37,'supportguy','support',37);
+insert into Characters (ID,Name,class,PlayerID) values(38,'notfighterguy','fighter',38);
+insert into Characters (ID,Name,class,PlayerID) values(39,'sniperguy','sniper',39);
+insert into Characters (ID,Name,class,PlayerID) values(40,'notsniperguy','fighter',40);
+insert into Characters (ID,Name,class,PlayerID) values(41,'notsupportguy','support',41);
+insert into Characters (ID,Name,class,PlayerID) values(42,'compost','fighter',42);
+insert into Characters (ID,Name,class,PlayerID) values(43,'pyle','support',43);
+insert into Characters (ID,Name,class,PlayerID) values(44,'monkeybusiness','fighter',44);
+insert into Characters (ID,Name,class,PlayerID) values(45,'campground','sniper',45);
+insert into Characters (ID,Name,class,PlayerID) values(46,'comeagain','fighter',46);
+insert into Characters (ID,Name,class,PlayerID) values(47,'ohnoes','support',47);
+insert into Characters (ID,Name,class,PlayerID) values(48,'iwin','fighter',48);
+insert into Characters (ID,Name,class,PlayerID) values(49,'uwin','support',49);
+insert into Characters (ID,Name,class,PlayerID) values(50,'we','fighter',50);
+insert into Characters (ID,Name,class,PlayerID) values(51,'all','sniper',51);
+insert into Characters (ID,Name,class,PlayerID) values(52,'win','fighter',52);
+insert into Characters (ID,Name,class,PlayerID) values(53,'this','support',53);
+insert into Characters (ID,Name,class,PlayerID) values(54,'is','fighter',54);
+insert into Characters (ID,Name,class,PlayerID) values(55,'supposed','medic',55);
+insert into Characters (ID,Name,class,PlayerID) values(56,'to','fighter',56);
+insert into Characters (ID,Name,class,PlayerID) values(57,'be','sniper',57);
+insert into Characters (ID,Name,class,PlayerID) values(58,'a','fighter',58);
+insert into Characters (ID,Name,class,PlayerID) values(59,'name','support',59);
+insert into Characters (ID,Name,class,PlayerID) values(60,'this','fighter',60);
+insert into Characters (ID,Name,class,PlayerID) values(61,'could','support',61);
+insert into Characters (ID,Name,class,PlayerID) values(62,'not','fighter',62);
+insert into Characters (ID,Name,class,PlayerID) values(63,'be','sniper',63);
+insert into Characters (ID,Name,class,PlayerID) values(64,'in','fighter',64);
+insert into Characters (ID,Name,class,PlayerID) values(65,'order','medic',65);
+insert into Characters (ID,Name,class,PlayerID) values(66,'i','fighter',66);
+insert into Characters (ID,Name,class,PlayerID) values(67,'Wrote','support',67);
+insert into Characters (ID,Name,class,PlayerID) values(68,'a','fighter',68);
+insert into Characters (ID,Name,class,PlayerID) values(69,'Program','sniper',69);
+insert into Characters (ID,Name,class,PlayerID) values(70,'For','fighter',70);
+insert into Characters (ID,Name,class,PlayerID) values(71,'This','support',71);
+insert into Characters (ID,Name,class,PlayerID) values(72,'Just','fighter',72);
+insert into Characters (ID,Name,class,PlayerID) values(73,'A','support',73);
+insert into Characters (ID,Name,class,PlayerID) values(74,'List','fighter',74);
+
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(4,13854,10280,3574,289,353,0);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(5,52748,16166,36582,222,425,1);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(1,14285,7839,6446,368,280,2);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(4,21221,16742,4479,240,360,3);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(0,8089,7374,715,337,466,4);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(0,38265,4836,33429,8,324,5);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(2,27124,11108,16016,461,475,6);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(1,59183,35764,23419,433,19,7);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(2,48548,32502,16046,24,179,8);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(5,18393,2486,15907,470,195,9);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(3,16889,8222,8667,86,342,10);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(0,35386,2837,32549,185,253,11);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(5,5165,2759,2406,339,248,12);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(4,53159,47508,5651,169,340,13);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(2,63390,31420,31970,29,31,14);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(4,28783,26164,2619,195,75,15);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(5,32596,26817,5779,401,322,16);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(1,41548,16814,24734,147,149,17);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(1,22414,398,22016,181,197,18);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(4,38863,4647,34216,214,287,19);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(0,29017,5963,23054,149,92,20);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(5,33047,25072,7975,381,494,21);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(2,24015,20093,3922,264,341,22);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(1,32321,20,32301,300,147,23);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(2,60330,25412,34918,317,16,24);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(2,22974,12757,10217,323,500,25);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(2,40499,6773,33726,228,401,26);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(4,15538,1413,14125,433,355,27);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(5,14006,1226,12780,411,282,28);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(2,15651,928,14723,58,27,29);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(3,44131,36354,7777,265,380,30);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(5,23811,6548,17263,220,205,31);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(1,46393,2941,43452,378,208,32);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(5,25363,17841,7522,51,415,33);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(3,46466,6875,39591,90,427,34);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(5,59526,11089,48437,395,183,35);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(2,60560,977,59583,7,144,36);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(3,56854,24274,32580,170,179,37);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(4,35043,21758,13285,318,492,38);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(4,10280,3903,6377,270,61,39);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(5,1690,121,1569,165,32,40);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(4,48768,4809,43959,388,414,41);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(5,59792,44660,15132,333,54,42);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(3,65565,56861,8704,484,461,43);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(1,21367,17619,3748,65,19,44);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(1,63894,24457,39437,65,233,45);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(3,10264,746,9518,443,1,46);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(3,31367,12565,18802,235,42,47);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(2,51254,24901,26353,418,110,48);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(5,14425,6025,8400,277,119,49);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(5,23856,19643,4213,198,347,50);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(1,48688,16786,31902,13,243,51);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(3,46431,18912,27519,193,318,52);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(5,22655,10547,12108,337,372,53);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(0,59979,18715,41264,465,117,54);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(1,26308,3332,22976,139,295,55);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(3,21355,13050,8305,203,387,56);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(2,35656,31819,3837,63,141,57);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(5,25562,20118,5444,153,39,58);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(0,11840,1222,10618,98,16,59);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(0,41803,28895,12908,9,15,60);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(5,27808,9494,18314,182,484,61);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(5,15084,2823,12261,332,170,62);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(0,40262,22880,17382,352,89,63);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(5,38611,16054,22557,171,416,64);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(3,37091,28227,8864,273,61,65);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(4,64172,2211,61961,342,151,66);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(1,28863,9120,19743,470,321,67);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(1,60831,46265,14566,482,72,68);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(1,44574,25954,18620,198,478,69);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(1,15205,2848,12357,59,484,70);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(0,9401,8994,407,218,102,71);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(5,3688,118,3570,438,455,72);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(2,1010,607,403,104,88,73);
+insert into CharacterStats (Rank,ShotsFired,Hits,Misses,Kills,Deaths,CharID) values(5,49465,12302,37163,242,303,74);
+
+insert into Game (team1ID,Team2ID,WinnerID) values(0,14,0);
+insert into Game (team1ID,Team2ID,WinnerID) values(1,13,13);
+insert into Game (team1ID,Team2ID,WinnerID) values(2,12,12);
+insert into Game (team1ID,Team2ID,WinnerID) values(3,11,3);
+insert into Game (team1ID,Team2ID,WinnerID) values(4,10,10);
+insert into Game (team1ID,Team2ID,WinnerID) values(5,9,5);
+insert into Game (team1ID,Team2ID,WinnerID) values(6,8,6);
+insert into Game (team1ID,Team2ID,WinnerID) values(7,6,7);
+insert into Game (team1ID,Team2ID,WinnerID) values(8,7,8);
+insert into Game (team1ID,Team2ID,WinnerID) values(9,5,5);
+
+insert into Created(playerID,characterID) values(0,0);
+insert into Created(playerID,characterID) values(1,1);
+insert into Created(playerID,characterID) values(2,2);
+insert into Created(playerID,characterID) values(3,3);
+insert into Created(playerID,characterID) values(4,4);
+insert into Created(playerID,characterID) values(5,5);
+insert into Created(playerID,characterID) values(6,6);
+insert into Created(playerID,characterID) values(7,7);
+insert into Created(playerID,characterID) values(8,8);
+insert into Created(playerID,characterID) values(9,9);
+insert into Created(playerID,characterID) values(10,10);
+insert into Created(playerID,characterID) values(11,11);
+insert into Created(playerID,characterID) values(12,12);
+insert into Created(playerID,characterID) values(13,13);
+insert into Created(playerID,characterID) values(14,14);
+insert into Created(playerID,characterID) values(15,15);
+insert into Created(playerID,characterID) values(16,16);
+insert into Created(playerID,characterID) values(17,17);
+insert into Created(playerID,characterID) values(18,18);
+insert into Created(playerID,characterID) values(19,19);
+insert into Created(playerID,characterID) values(20,20);
+insert into Created(playerID,characterID) values(21,21);
+insert into Created(playerID,characterID) values(22,22);
+insert into Created(playerID,characterID) values(23,23);
+insert into Created(playerID,characterID) values(24,24);
+insert into Created(playerID,characterID) values(25,25);
+insert into Created(playerID,characterID) values(26,26);
+insert into Created(playerID,characterID) values(27,27);
+insert into Created(playerID,characterID) values(28,28);
+insert into Created(playerID,characterID) values(29,29);
+insert into Created(playerID,characterID) values(30,30);
+insert into Created(playerID,characterID) values(31,31);
+insert into Created(playerID,characterID) values(32,32);
+insert into Created(playerID,characterID) values(33,33);
+insert into Created(playerID,characterID) values(34,34);
+insert into Created(playerID,characterID) values(35,35);
+insert into Created(playerID,characterID) values(36,36);
+insert into Created(playerID,characterID) values(37,37);
+insert into Created(playerID,characterID) values(38,38);
+insert into Created(playerID,characterID) values(39,39);
+insert into Created(playerID,characterID) values(40,04);
+insert into Created(playerID,characterID) values(41,41);
+insert into Created(playerID,characterID) values(42,42);
+insert into Created(playerID,characterID) values(43,43);
+insert into Created(playerID,characterID) values(44,44);
+insert into Created(playerID,characterID) values(45,45);
+insert into Created(playerID,characterID) values(46,46);
+insert into Created(playerID,characterID) values(47,47);
+insert into Created(playerID,characterID) values(48,48);
+insert into Created(playerID,characterID) values(49,49);
+insert into Created(playerID,characterID) values(50,50);
+insert into Created(playerID,characterID) values(51,51);
+insert into Created(playerID,characterID) values(52,52);
+insert into Created(playerID,characterID) values(53,53);
+insert into Created(playerID,characterID) values(54,54);
+insert into Created(playerID,characterID) values(55,55);
+insert into Created(playerID,characterID) values(56,56);
+insert into Created(playerID,characterID) values(57,57);
+insert into Created(playerID,characterID) values(58,58);
+insert into Created(playerID,characterID) values(59,59);
+insert into Created(playerID,characterID) values(60,60);
+insert into Created(playerID,characterID) values(61,61);
+insert into Created(playerID,characterID) values(62,62);
+insert into Created(playerID,characterID) values(63,63);
+insert into Created(playerID,characterID) values(64,64);
+insert into Created(playerID,characterID) values(65,65);
+insert into Created(playerID,characterID) values(66,66);
+insert into Created(playerID,characterID) values(67,67);
+insert into Created(playerID,characterID) values(68,68);
+insert into Created(playerID,characterID) values(69,69);
+insert into Created(playerID,characterID) values(70,70);
+insert into Created(playerID,characterID) values(71,71);
+insert into Created(playerID,characterID) values(72,72);
+insert into Created(playerID,characterID) values(73,73);
+insert into Created(playerID,characterID) values(74,74);
+
+insert into Joins(playerID,teamID) values(0,0);
+insert into Joins(playerID,teamID) values(1,0);
+insert into Joins(playerID,teamID) values(2,0);
+insert into Joins(playerID,teamID) values(3,0);
+insert into Joins(playerID,teamID) values(4,0);
+insert into Joins(playerID,teamID) values(5,1);
+insert into Joins(playerID,teamID) values(6,1);
+insert into Joins(playerID,teamID) values(7,1);
+insert into Joins(playerID,teamID) values(8,1);
+insert into Joins(playerID,teamID) values(9,1);
+insert into Joins(playerID,teamID) values(10,2);
+insert into Joins(playerID,teamID) values(11,2);
+insert into Joins(playerID,teamID) values(12,2);
+insert into Joins(playerID,teamID) values(13,2);
+insert into Joins(playerID,teamID) values(14,2);
+insert into Joins(playerID,teamID) values(15,3);
+insert into Joins(playerID,teamID) values(16,3);
+insert into Joins(playerID,teamID) values(17,3);
+insert into Joins(playerID,teamID) values(18,3);
+insert into Joins(playerID,teamID) values(19,3);
+insert into Joins(playerID,teamID) values(20,4);
+insert into Joins(playerID,teamID) values(21,4);
+insert into Joins(playerID,teamID) values(22,4);
+insert into Joins(playerID,teamID) values(23,4);
+insert into Joins(playerID,teamID) values(24,4);
+insert into Joins(playerID,teamID) values(25,5);
+insert into Joins(playerID,teamID) values(26,5);
+insert into Joins(playerID,teamID) values(27,5);
+insert into Joins(playerID,teamID) values(28,5);
+insert into Joins(playerID,teamID) values(29,5);
+insert into Joins(playerID,teamID) values(30,6);
+insert into Joins(playerID,teamID) values(31,6);
+insert into Joins(playerID,teamID) values(32,6);
+insert into Joins(playerID,teamID) values(33,6);
+insert into Joins(playerID,teamID) values(34,6);
+insert into Joins(playerID,teamID) values(35,7);
+insert into Joins(playerID,teamID) values(36,7);
+insert into Joins(playerID,teamID) values(37,7);
+insert into Joins(playerID,teamID) values(38,7);
+insert into Joins(playerID,teamID) values(39,7);
+insert into Joins(playerID,teamID) values(40,8);
+insert into Joins(playerID,teamID) values(41,8);
+insert into Joins(playerID,teamID) values(42,8);
+insert into Joins(playerID,teamID) values(43,8);
+insert into Joins(playerID,teamID) values(44,8);
+insert into Joins(playerID,teamID) values(45,9);
+insert into Joins(playerID,teamID) values(46,9);
+insert into Joins(playerID,teamID) values(47,9);
+insert into Joins(playerID,teamID) values(48,9);
+insert into Joins(playerID,teamID) values(49,9);
+insert into Joins(playerID,teamID) values(50,10);
+insert into Joins(playerID,teamID) values(51,10);
+insert into Joins(playerID,teamID) values(52,10);
+insert into Joins(playerID,teamID) values(53,10);
+insert into Joins(playerID,teamID) values(54,10);
+insert into Joins(playerID,teamID) values(55,11);
+insert into Joins(playerID,teamID) values(56,11);
+insert into Joins(playerID,teamID) values(57,11);
+insert into Joins(playerID,teamID) values(58,11);
+insert into Joins(playerID,teamID) values(59,11);
+insert into Joins(playerID,teamID) values(60,12);
+insert into Joins(playerID,teamID) values(61,12);
+insert into Joins(playerID,teamID) values(62,12);
+insert into Joins(playerID,teamID) values(63,12);
+insert into Joins(playerID,teamID) values(64,12);
+insert into Joins(playerID,teamID) values(65,13);
+insert into Joins(playerID,teamID) values(66,13);
+insert into Joins(playerID,teamID) values(67,13);
+insert into Joins(playerID,teamID) values(68,13);
+insert into Joins(playerID,teamID) values(69,13);
+insert into Joins(playerID,teamID) values(70,14);
+insert into Joins(playerID,teamID) values(71,14);
+insert into Joins(playerID,teamID) values(72,14);
+insert into Joins(playerID,teamID) values(73,14);
+insert into Joins(playerID,teamID) values(74,14);
+
+insert into Owns(orgID,teamID) values(9,0);
+insert into Owns(orgID,teamID) values(4,1);
+insert into Owns(orgID,teamID) values(6,2);
+insert into Owns(orgID,teamID) values(5,3);
+insert into Owns(orgID,teamID) values(8,4);
+insert into Owns(orgID,teamID) values(0,5);
+insert into Owns(orgID,teamID) values(8,6);
+insert into Owns(orgID,teamID) values(7,7);
+insert into Owns(orgID,teamID) values(1,8);
+insert into Owns(orgID,teamID) values(3,9);
+insert into Owns(orgID,teamID) values(7,10);
+insert into Owns(orgID,teamID) values(1,11);
+insert into Owns(orgID,teamID) values(2,12);
+insert into Owns(orgID,teamID) values(7,13);
+insert into Owns(orgID,teamID) values(0,14);
+
+insert into CompeteIn(team1ID,team2ID) values(0,14);
+insert into CompeteIn(team1ID,team2ID) values(1,13);
+insert into CompeteIn(team1ID,team2ID) values(2,12);
+insert into CompeteIn(team1ID,team2ID) values(3,11);
+insert into CompeteIn(team1ID,team2ID) values(4,10);
+insert into CompeteIn(team1ID,team2ID) values(5,9);
+insert into CompeteIn(team1ID,team2ID) values(6,8);
+insert into CompeteIn(team1ID,team2ID) values(7,6);
+insert into CompeteIn(team1ID,team2ID) values(8,7);
+insert into CompeteIn(team1ID,team2ID) values(9,5);
+
+insert into OrgGenerates(orgID,ID) values(0,0);
+insert into OrgGenerates(orgID,ID) values(1,1);
+insert into OrgGenerates(orgID,ID) values(2,2);
+insert into OrgGenerates(orgID,ID) values(3,3);
+insert into OrgGenerates(orgID,ID) values(4,4);
+insert into OrgGenerates(orgID,ID) values(5,5);
+insert into OrgGenerates(orgID,ID) values(6,6);
+insert into OrgGenerates(orgID,ID) values(7,7);
+insert into OrgGenerates(orgID,ID) values(8,8);
+insert into OrgGenerates(orgID,ID) values(9,9);
+
+insert into TeamGenerates(TeamID,ID) values(0,0);
+insert into TeamGenerates(TeamID,ID) values(1,1);
+insert into TeamGenerates(TeamID,ID) values(2,2);
+insert into TeamGenerates(TeamID,ID) values(3,3);
+insert into TeamGenerates(TeamID,ID) values(4,4);
+insert into TeamGenerates(TeamID,ID) values(5,5);
+insert into TeamGenerates(TeamID,ID) values(6,6);
+insert into TeamGenerates(TeamID,ID) values(7,7);
+insert into TeamGenerates(TeamID,ID) values(8,8);
+insert into TeamGenerates(TeamID,ID) values(9,9);
+insert into TeamGenerates(TeamID,ID) values(10,10);
+insert into TeamGenerates(TeamID,ID) values(11,11);
+insert into TeamGenerates(TeamID,ID) values(12,12);
+insert into TeamGenerates(TeamID,ID) values(13,13);
+insert into TeamGenerates(TeamID,ID) values(14,14);
+
+insert into PlayerGenerates(PlayerID,ID) values(0,0);
+insert into PlayerGenerates(PlayerID,ID) values(1,1);
+insert into PlayerGenerates(PlayerID,ID) values(2,2);
+insert into PlayerGenerates(PlayerID,ID) values(3,3);
+insert into PlayerGenerates(PlayerID,ID) values(4,4);
+insert into PlayerGenerates(PlayerID,ID) values(5,5);
+insert into PlayerGenerates(PlayerID,ID) values(6,6);
+insert into PlayerGenerates(PlayerID,ID) values(7,7);
+insert into PlayerGenerates(PlayerID,ID) values(8,8);
+insert into PlayerGenerates(PlayerID,ID) values(9,9);
+insert into PlayerGenerates(PlayerID,ID) values(10,10);
+insert into PlayerGenerates(PlayerID,ID) values(11,11);
+insert into PlayerGenerates(PlayerID,ID) values(12,12);
+insert into PlayerGenerates(PlayerID,ID) values(13,13);
+insert into PlayerGenerates(PlayerID,ID) values(14,14);
+insert into PlayerGenerates(PlayerID,ID) values(15,15);
+insert into PlayerGenerates(PlayerID,ID) values(16,16);
+insert into PlayerGenerates(PlayerID,ID) values(17,17);
+insert into PlayerGenerates(PlayerID,ID) values(18,18);
+insert into PlayerGenerates(PlayerID,ID) values(19,19);
+insert into PlayerGenerates(PlayerID,ID) values(20,20);
+insert into PlayerGenerates(PlayerID,ID) values(21,21);
+insert into PlayerGenerates(PlayerID,ID) values(22,22);
+insert into PlayerGenerates(PlayerID,ID) values(23,23);
+insert into PlayerGenerates(PlayerID,ID) values(24,24);
+insert into PlayerGenerates(PlayerID,ID) values(25,25);
+insert into PlayerGenerates(PlayerID,ID) values(26,26);
+insert into PlayerGenerates(PlayerID,ID) values(27,27);
+insert into PlayerGenerates(PlayerID,ID) values(28,28);
+insert into PlayerGenerates(PlayerID,ID) values(29,29);
+insert into PlayerGenerates(PlayerID,ID) values(30,30);
+insert into PlayerGenerates(PlayerID,ID) values(31,31);
+insert into PlayerGenerates(PlayerID,ID) values(32,32);
+insert into PlayerGenerates(PlayerID,ID) values(33,33);
+insert into PlayerGenerates(PlayerID,ID) values(34,34);
+insert into PlayerGenerates(PlayerID,ID) values(35,35);
+insert into PlayerGenerates(PlayerID,ID) values(36,36);
+insert into PlayerGenerates(PlayerID,ID) values(37,37);
+insert into PlayerGenerates(PlayerID,ID) values(38,38);
+insert into PlayerGenerates(PlayerID,ID) values(39,39);
+insert into PlayerGenerates(PlayerID,ID) values(40,40);
+insert into PlayerGenerates(PlayerID,ID) values(41,41);
+insert into PlayerGenerates(PlayerID,ID) values(42,42);
+insert into PlayerGenerates(PlayerID,ID) values(43,43);
+insert into PlayerGenerates(PlayerID,ID) values(44,44);
+insert into PlayerGenerates(PlayerID,ID) values(45,45);
+insert into PlayerGenerates(PlayerID,ID) values(46,46);
+insert into PlayerGenerates(PlayerID,ID) values(47,47);
+insert into PlayerGenerates(PlayerID,ID) values(48,48);
+insert into PlayerGenerates(PlayerID,ID) values(49,49);
+insert into PlayerGenerates(PlayerID,ID) values(50,50);
+insert into PlayerGenerates(PlayerID,ID) values(51,51);
+insert into PlayerGenerates(PlayerID,ID) values(52,52);
+insert into PlayerGenerates(PlayerID,ID) values(53,53);
+insert into PlayerGenerates(PlayerID,ID) values(54,54);
+insert into PlayerGenerates(PlayerID,ID) values(55,55);
+insert into PlayerGenerates(PlayerID,ID) values(56,56);
+insert into PlayerGenerates(PlayerID,ID) values(57,57);
+insert into PlayerGenerates(PlayerID,ID) values(58,58);
+insert into PlayerGenerates(PlayerID,ID) values(59,59);
+insert into PlayerGenerates(PlayerID,ID) values(60,60);
+insert into PlayerGenerates(PlayerID,ID) values(61,61);
+insert into PlayerGenerates(PlayerID,ID) values(62,62);
+insert into PlayerGenerates(PlayerID,ID) values(63,63);
+insert into PlayerGenerates(PlayerID,ID) values(64,64);
+insert into PlayerGenerates(PlayerID,ID) values(65,65);
+insert into PlayerGenerates(PlayerID,ID) values(66,66);
+insert into PlayerGenerates(PlayerID,ID) values(67,67);
+insert into PlayerGenerates(PlayerID,ID) values(68,68);
+insert into PlayerGenerates(PlayerID,ID) values(69,69);
+insert into PlayerGenerates(PlayerID,ID) values(70,70);
+insert into PlayerGenerates(PlayerID,ID) values(71,71);
+insert into PlayerGenerates(PlayerID,ID) values(72,72);
+insert into PlayerGenerates(PlayerID,ID) values(73,73);
+insert into PlayerGenerates(PlayerID,ID) values(74,74);
+
+insert into CharGenerates(CharID,ID) values(0,0);
+insert into CharGenerates(CharID,ID) values(1,1);
+insert into CharGenerates(CharID,ID) values(2,2);
+insert into CharGenerates(CharID,ID) values(3,3);
+insert into CharGenerates(CharID,ID) values(4,4);
+insert into CharGenerates(CharID,ID) values(5,5);
+insert into CharGenerates(CharID,ID) values(6,6);
+insert into CharGenerates(CharID,ID) values(7,7);
+insert into CharGenerates(CharID,ID) values(8,8);
+insert into CharGenerates(CharID,ID) values(9,9);
+insert into CharGenerates(CharID,ID) values(10,10);
+insert into CharGenerates(CharID,ID) values(11,11);
+insert into CharGenerates(CharID,ID) values(12,12);
+insert into CharGenerates(CharID,ID) values(13,13);
+insert into CharGenerates(CharID,ID) values(14,14);
+insert into CharGenerates(CharID,ID) values(15,15);
+insert into CharGenerates(CharID,ID) values(16,16);
+insert into CharGenerates(CharID,ID) values(17,17);
+insert into CharGenerates(CharID,ID) values(18,18);
+insert into CharGenerates(CharID,ID) values(19,19);
+insert into CharGenerates(CharID,ID) values(20,20);
+insert into CharGenerates(CharID,ID) values(21,21);
+insert into CharGenerates(CharID,ID) values(22,22);
+insert into CharGenerates(CharID,ID) values(23,23);
+insert into CharGenerates(CharID,ID) values(24,24);
+insert into CharGenerates(CharID,ID) values(25,25);
+insert into CharGenerates(CharID,ID) values(26,26);
+insert into CharGenerates(CharID,ID) values(27,27);
+insert into CharGenerates(CharID,ID) values(28,28);
+insert into CharGenerates(CharID,ID) values(29,29);
+insert into CharGenerates(CharID,ID) values(30,30);
+insert into CharGenerates(CharID,ID) values(31,31);
+insert into CharGenerates(CharID,ID) values(32,32);
+insert into CharGenerates(CharID,ID) values(33,33);
+insert into CharGenerates(CharID,ID) values(34,34);
+insert into CharGenerates(CharID,ID) values(35,35);
+insert into CharGenerates(CharID,ID) values(36,36);
+insert into CharGenerates(CharID,ID) values(37,37);
+insert into CharGenerates(CharID,ID) values(38,38);
+insert into CharGenerates(CharID,ID) values(39,39);
+insert into CharGenerates(CharID,ID) values(40,40);
+insert into CharGenerates(CharID,ID) values(41,41);
+insert into CharGenerates(CharID,ID) values(42,42);
+insert into CharGenerates(CharID,ID) values(43,43);
+insert into CharGenerates(CharID,ID) values(44,44);
+insert into CharGenerates(CharID,ID) values(45,45);
+insert into CharGenerates(CharID,ID) values(46,46);
+insert into CharGenerates(CharID,ID) values(47,47);
+insert into CharGenerates(CharID,ID) values(48,48);
+insert into CharGenerates(CharID,ID) values(49,49);
+insert into CharGenerates(CharID,ID) values(50,50);
+insert into CharGenerates(CharID,ID) values(51,51);
+insert into CharGenerates(CharID,ID) values(52,52);
+insert into CharGenerates(CharID,ID) values(53,53);
+insert into CharGenerates(CharID,ID) values(54,54);
+insert into CharGenerates(CharID,ID) values(55,55);
+insert into CharGenerates(CharID,ID) values(56,56);
+insert into CharGenerates(CharID,ID) values(57,57);
+insert into CharGenerates(CharID,ID) values(58,58);
+insert into CharGenerates(CharID,ID) values(59,59);
+insert into CharGenerates(CharID,ID) values(60,60);
+insert into CharGenerates(CharID,ID) values(61,61);
+insert into CharGenerates(CharID,ID) values(62,62);
+insert into CharGenerates(CharID,ID) values(63,63);
+insert into CharGenerates(CharID,ID) values(64,64);
+insert into CharGenerates(CharID,ID) values(65,65);
+insert into CharGenerates(CharID,ID) values(66,66);
+insert into CharGenerates(CharID,ID) values(67,67);
+insert into CharGenerates(CharID,ID) values(68,68);
+insert into CharGenerates(CharID,ID) values(69,69);
+insert into CharGenerates(CharID,ID) values(70,70);
+insert into CharGenerates(CharID,ID) values(71,71);
+insert into CharGenerates(CharID,ID) values(72,72);
+insert into CharGenerates(CharID,ID) values(73,73);
+insert into CharGenerates(CharID,ID) values(74,74);
+
+Queries:
+select ID,Email from Player where TeamID = 0 union select ID,Email from Player where TeamID = 5; #get the ID and email of all of the players in Teams 0 and 5
+select Name from Team where ID in (select TeamID from Player where ID = 2); #get the name of the team or teams that player 2 belongs to
+select Name from Organization where ID in (select OrgID from Team where ID in (select TeamID from Player where ID = 9));#get the name of the organization(s) that the player with id 9 belongs to.
+select max(shotsFired) from CharacterStats; #get the highest number of shots fired by a single character
+select Email from Player where ID in (select PlayerID from Characters where ID in (select CharID from CharacterStats where ShotsFired in (select max(shotsFired) from CharacterStats))); #get the email of the player with the character that fired the most shots.
+select Rank,avg(ShotsFired) as avg_shots from CharacterStats group by Rank; #Get the average number of shots fired for each character rank.
+select WinnerID from Game group by WinnerID having count(WinnerID) > 1; #Get the Ids of the team(s) that have had more than one win
+select Organization.Name as Org_Name, Team.Name as Team_Name from Organization inner join Team on Organization.ID = Team.OrgID; #Get the names of the teams and the organizations they belong to
+select Name,Class,PlayerID,TeamID from Characters inner join Player on Characters.PlayerID = Player.ID; #Get the Name,Class,PlayerID, and TeamID from joining the Characters table and the Player table.
+select * from (select Name,Class,PlayerID,TeamID from Characters inner join Player on Characters.PlayerID = Player.ID) as newTable where class = 'fighter'; #Get only Characters that have the class 'fighter' from the join of the Characters and Player tables.
+select distinct Team.Name as Team_Name from (select * from (select Name,Class,PlayerID,TeamID from Characters inner join Player on Characters.PlayerID = Player.ID) as newTable where class = 'fighter') as TeamTable inner join Team on Team.ID = TeamID; #Get the names of all of the teams that have the class 'fighters' on them.
+select Team.Name as Team_Name,count(Team.Name) from (select * from (select Name,Class,PlayerID,TeamID from Characters inner join Player on Characters.PlayerID = Player.ID) as newTable where class = 'fighter') as TeamTable inner join Team on Team.ID = TeamID group by Team.Name; #Get the number of 'fighters' on each team that has them.
+select Team_Name from (select Team.Name as Team_Name,count(Team.Name) as team_count from (select * from (select Name,Class,PlayerID,TeamID from Characters inner join Player on Characters.PlayerID = Player.ID) as newTable where class = 'fighter') as TeamTable inner join Team on Team.ID = TeamID group by Team.Name having team_count = 3) as FCount; #Get the team names of the teams that have exactly 3 'fighters'.
+update Player set Email = 'fightingCosworth@email.com' where ID = 54; #Change the email for the player with ID of 54
+select * from Player where ID = 54; #Get the player with ID of 54 to check if previous update went through
+select * from Characters limit 10; #Get only 10 tuples from the Characters table.
+select * from Organization where name like '%a_'; #Get all organizations that have an 'a' as the second to last letter.
+select * from CharacterStats where Kills between 400 and 500 order by kills; #Get all characters with kills between 400 and 500 and sort the result on Kills.
+select Rank,Name as Char_Name,Class,Email from CharacterStats right join (Characters right join Player on Characters.PlayerID = Player.ID) on CharacterStats.CharID = Characters.ID; #Get the Rank, Name, and class of a character, as well as the email of the player the character belongs to using a right outer join.
+select Name,Hits,Misses from Characters left join (CharGenerates left join CharacterStats on CharGenerates.ID = CharacterStats.CharID) on Characters.ID = CharacterStats.CharID; #Get all Characters Name, number of hits, and number of misses using a left join with the CharacterStats and Characters tables.
+delete from Characters where ID = 74; #Remove the character with id 74.
+select * from Team where ID not between 0 and 7; #Get Teams with id greater than 7.
+select max(OrgCount) as Highest_Teams from (select count(OrgID) as OrgCount from Team group by OrgID) as counting; #Get the Highest number of teams for a single organization.

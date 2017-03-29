@@ -1,0 +1,15 @@
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(4,77,3,0);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(4,3,62,1);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(4,26,85,2);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(2,57,43,3);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(2,54,81,4);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(5,9,54,5);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(2,29,38,6);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(5,51,86,7);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(5,36,75,8);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(0,91,67,9);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(3,29,11,10);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(5,69,63,11);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(5,49,40,12);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(5,42,10,13);
+insert into TeamStats (Rank,MatchesWon,MatchesLost,TeamID) values(2,11,30,14);
