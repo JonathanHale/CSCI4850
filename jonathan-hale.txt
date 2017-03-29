@@ -878,26 +878,770 @@ insert into CharGenerates(CharID,ID) values(73,73);
 insert into CharGenerates(CharID,ID) values(74,74);
 
 Queries:
-select ID,Email from Player where TeamID = 0 union select ID,Email from Player where TeamID = 5; #get the ID and email of all of the players in Teams 0 and 5
-select Name from Team where ID in (select TeamID from Player where ID = 2); #get the name of the team or teams that player 2 belongs to
-select Name from Organization where ID in (select OrgID from Team where ID in (select TeamID from Player where ID = 9));#get the name of the organization(s) that the player with id 9 belongs to.
-select max(shotsFired) from CharacterStats; #get the highest number of shots fired by a single character
-select Email from Player where ID in (select PlayerID from Characters where ID in (select CharID from CharacterStats where ShotsFired in (select max(shotsFired) from CharacterStats))); #get the email of the player with the character that fired the most shots.
-select Rank,avg(ShotsFired) as avg_shots from CharacterStats group by Rank; #Get the average number of shots fired for each character rank.
-select WinnerID from Game group by WinnerID having count(WinnerID) > 1; #Get the Ids of the team(s) that have had more than one win
-select Organization.Name as Org_Name, Team.Name as Team_Name from Organization inner join Team on Organization.ID = Team.OrgID; #Get the names of the teams and the organizations they belong to
-select Name,Class,PlayerID,TeamID from Characters inner join Player on Characters.PlayerID = Player.ID; #Get the Name,Class,PlayerID, and TeamID from joining the Characters table and the Player table.
-select * from (select Name,Class,PlayerID,TeamID from Characters inner join Player on Characters.PlayerID = Player.ID) as newTable where class = 'fighter'; #Get only Characters that have the class 'fighter' from the join of the Characters and Player tables.
-select distinct Team.Name as Team_Name from (select * from (select Name,Class,PlayerID,TeamID from Characters inner join Player on Characters.PlayerID = Player.ID) as newTable where class = 'fighter') as TeamTable inner join Team on Team.ID = TeamID; #Get the names of all of the teams that have the class 'fighters' on them.
-select Team.Name as Team_Name,count(Team.Name) from (select * from (select Name,Class,PlayerID,TeamID from Characters inner join Player on Characters.PlayerID = Player.ID) as newTable where class = 'fighter') as TeamTable inner join Team on Team.ID = TeamID group by Team.Name; #Get the number of 'fighters' on each team that has them.
-select Team_Name from (select Team.Name as Team_Name,count(Team.Name) as team_count from (select * from (select Name,Class,PlayerID,TeamID from Characters inner join Player on Characters.PlayerID = Player.ID) as newTable where class = 'fighter') as TeamTable inner join Team on Team.ID = TeamID group by Team.Name having team_count = 3) as FCount; #Get the team names of the teams that have exactly 3 'fighters'.
-update Player set Email = 'fightingCosworth@email.com' where ID = 54; #Change the email for the player with ID of 54
-select * from Player where ID = 54; #Get the player with ID of 54 to check if previous update went through
-select * from Characters limit 10; #Get only 10 tuples from the Characters table.
-select * from Organization where name like '%a_'; #Get all organizations that have an 'a' as the second to last letter.
-select * from CharacterStats where Kills between 400 and 500 order by kills; #Get all characters with kills between 400 and 500 and sort the result on Kills.
-select Rank,Name as Char_Name,Class,Email from CharacterStats right join (Characters right join Player on Characters.PlayerID = Player.ID) on CharacterStats.CharID = Characters.ID; #Get the Rank, Name, and class of a character, as well as the email of the player the character belongs to using a right outer join.
-select Name,Hits,Misses from Characters left join (CharGenerates left join CharacterStats on CharGenerates.ID = CharacterStats.CharID) on Characters.ID = CharacterStats.CharID; #Get all Characters Name, number of hits, and number of misses using a left join with the CharacterStats and Characters tables.
-delete from Characters where ID = 74; #Remove the character with id 74.
-select * from Team where ID not between 0 and 7; #Get Teams with id greater than 7.
-select max(OrgCount) as Highest_Teams from (select count(OrgID) as OrgCount from Team group by OrgID) as counting; #Get the Highest number of teams for a single organization.
+ select ID,Email from Player where TeamID = 0 union select ID,Email from Player where TeamID = 5; #get the ID and email of all of the players in Teams 0 and 5
++----+-------------------------+
+| ID | Email                   |
++----+-------------------------+
+|  0 | 10000062jamse@email.com |
+|  1 | 1@email.com             |
+|  2 | 2@email.com             |
+|  3 | 3@email.com             |
+|  4 | 4@email.com             |
+| 25 | 125@email.com           |
+| 26 | 126@email.com           |
+| 27 | 117@email.com           |
+| 28 | 128@email.com           |
+| 29 | 129@email.com           |
++----+-------------------------+
+10 rows in set (0.00 sec)
+
+ select Name from Team where ID in (select TeamID from Player where ID = 2); #get the name of the team or teams that player 2 belongs to
++--------+
+| Name   |
++--------+
+| Tigers |
++--------+
+1 row in set (0.00 sec)
+
+ select Name from Organization where ID in (select OrgID from Team where ID in (select TeamID from Player where ID = 9));#get the name of the organization(s) that the player with id 9 belongs to.
++------------+
+| Name       |
++------------+
+| BreakNecks |
++------------+
+1 row in set (0.00 sec)
+
+ select max(shotsFired) from CharacterStats; #get the highest number of shots fired by a single character
++-----------------+
+| max(shotsFired) |
++-----------------+
+|           65565 |
++-----------------+
+1 row in set (0.01 sec)
+
+ select Email from Player where ID in (select PlayerID from Characters where ID in (select CharID from CharacterStats where ShotsFired in (select max(shotsFired) from CharacterStats))); #get the email of the player with the character that fired the most shots.
++---------------+
+| Email         |
++---------------+
+| 143@email.com |
++---------------+
+1 row in set (0.00 sec)
+
+ select Rank,avg(ShotsFired) as avg_shots from CharacterStats group by Rank; #Get the average number of shots fired for each character rank.
++------+------------+
+| Rank | avg_shots  |
++------+------------+
+|    0 | 30449.1111 |
+|    1 | 37562.4286 |
+|    2 | 37584.2500 |
+|    3 | 37641.3000 |
+|    4 | 32968.1000 |
+|    5 | 26201.3684 |
++------+------------+
+6 rows in set (0.00 sec)
+
+ select WinnerID from Game group by WinnerID having count(WinnerID) > 1; #Get the Ids of the team(s) that have had more than one win
++----------+
+| WinnerID |
++----------+
+|        5 |
++----------+
+1 row in set (0.00 sec)
+
+ select Organization.Name as Org_Name, Team.Name as Team_Name from Organization inner join Team on Organization.ID = Team.OrgID; #Get the names of the teams and the organizations they belong to
++------------+----------------------+
+| Org_Name   | Team_Name            |
++------------+----------------------+
+| Fuzzies    | OOMOO                |
+| Fuzzies    | Bottle Rockets       |
+| Beekers    | Thievery Corporation |
+| Beekers    | Korn                 |
+| NOMS       | Murder by Death      |
+| Orfs       | XX                   |
+| BreakNecks | Badgers              |
+| Bears      | Munkshots            |
+| Cobras     | Elite                |
+| Wendigos   | Mesmer               |
+| Wendigos   | Radiohead            |
+| Wendigos   | Tunnel Snakes        |
+| Dingos     | Camshaft             |
+| Dingos     | Optic                |
+| Mossly     | Tigers               |
++------------+----------------------+
+15 rows in set (0.00 sec)
+
+ select Name,Class,PlayerID,TeamID from Characters inner join Player on Characters.PlayerID = Player.ID; #Get the Name,Class,PlayerID, and TeamID from joining the Characters table and the Player table.
++----------------+---------+----------+--------+
+| Name           | Class   | PlayerID | TeamID |
++----------------+---------+----------+--------+
+| Frank          | fighter |        0 |      0 |
+| Sinatra        | support |        1 |      0 |
+| Homer          | fighter |        2 |      0 |
+| Marge          | sniper  |        3 |      0 |
+| Lisa           | fighter |        4 |      0 |
+| Bart           | medic   |        5 |      1 |
+| Maggie         | fighter |        6 |      1 |
+| JD             | support |        7 |      1 |
+| Oscar          | fighter |        8 |      1 |
+| Sasha          | sniper  |        9 |      1 |
+| Boomer         | fighter |       10 |      2 |
+| Max            | support |       11 |      2 |
+| Sadie          | fighter |       12 |      2 |
+| Leo            | support |       13 |      2 |
+| Karla          | fighter |       14 |      2 |
+| Jon            | sniper  |       15 |      3 |
+| Rachel         | fighter |       16 |      3 |
+| Mark           | support |       17 |      3 |
+| Torie          | fighter |       18 |      3 |
+| Kay            | support |       19 |      3 |
+| Andy           | fighter |       20 |      4 |
+| Dylan          | sniper  |       21 |      4 |
+| Cody           | fighter |       22 |      4 |
+| Orf            | support |       23 |      4 |
+| Tyler          | fighter |       24 |      4 |
+| Frankfurter    | medic   |       25 |      5 |
+| Munster        | fighter |       26 |      5 |
+| Cheeeee        | sniper  |       27 |      5 |
+| Wacko          | fighter |       28 |      5 |
+| Yacko          | support |       29 |      5 |
+| Dot            | fighter |       30 |      6 |
+| Einstein       | support |       31 |      6 |
+| Munch          | fighter |       32 |      6 |
+| Keepsake       | sniper  |       33 |      6 |
+| wannabe        | fighter |       34 |      6 |
+| medicguy       | medic   |       35 |      7 |
+| figherguy      | fighter |       36 |      7 |
+| supportguy     | support |       37 |      7 |
+| notfighterguy  | fighter |       38 |      7 |
+| sniperguy      | sniper  |       39 |      7 |
+| notsniperguy   | fighter |       40 |      8 |
+| notsupportguy  | support |       41 |      8 |
+| compost        | fighter |       42 |      8 |
+| pyle           | support |       43 |      8 |
+| monkeybusiness | fighter |       44 |      8 |
+| campground     | sniper  |       45 |      9 |
+| comeagain      | fighter |       46 |      9 |
+| ohnoes         | support |       47 |      9 |
+| iwin           | fighter |       48 |      9 |
+| uwin           | support |       49 |      9 |
+| we             | fighter |       50 |     10 |
+| all            | sniper  |       51 |     10 |
+| win            | fighter |       52 |     10 |
+| this           | support |       53 |     10 |
+| is             | fighter |       54 |     10 |
+| supposed       | medic   |       55 |     11 |
+| to             | fighter |       56 |     11 |
+| be             | sniper  |       57 |     11 |
+| a              | fighter |       58 |     11 |
+| name           | support |       59 |     11 |
+| this           | fighter |       60 |     12 |
+| could          | support |       61 |     12 |
+| not            | fighter |       62 |     12 |
+| be             | sniper  |       63 |     12 |
+| in             | fighter |       64 |     12 |
+| order          | medic   |       65 |     13 |
+| i              | fighter |       66 |     13 |
+| Wrote          | support |       67 |     13 |
+| a              | fighter |       68 |     13 |
+| Program        | sniper  |       69 |     13 |
+| For            | fighter |       70 |     14 |
+| This           | support |       71 |     14 |
+| Just           | fighter |       72 |     14 |
+| A              | support |       73 |     14 |
++----------------+---------+----------+--------+
+74 rows in set (0.00 sec)
+
+ select * from (select Name,Class,PlayerID,TeamID from Characters inner join Player on Characters.PlayerID = Player.ID) as newTable where class = 'fighter'; #Get only Characters that have the class 'fighter' from the join of the Characters and Player tables.
++----------------+---------+----------+--------+
+| Name           | Class   | PlayerID | TeamID |
++----------------+---------+----------+--------+
+| Frank          | fighter |        0 |      0 |
+| Homer          | fighter |        2 |      0 |
+| Lisa           | fighter |        4 |      0 |
+| Maggie         | fighter |        6 |      1 |
+| Oscar          | fighter |        8 |      1 |
+| Boomer         | fighter |       10 |      2 |
+| Sadie          | fighter |       12 |      2 |
+| Karla          | fighter |       14 |      2 |
+| Rachel         | fighter |       16 |      3 |
+| Torie          | fighter |       18 |      3 |
+| Andy           | fighter |       20 |      4 |
+| Cody           | fighter |       22 |      4 |
+| Tyler          | fighter |       24 |      4 |
+| Munster        | fighter |       26 |      5 |
+| Wacko          | fighter |       28 |      5 |
+| Dot            | fighter |       30 |      6 |
+| Munch          | fighter |       32 |      6 |
+| wannabe        | fighter |       34 |      6 |
+| figherguy      | fighter |       36 |      7 |
+| notfighterguy  | fighter |       38 |      7 |
+| notsniperguy   | fighter |       40 |      8 |
+| compost        | fighter |       42 |      8 |
+| monkeybusiness | fighter |       44 |      8 |
+| comeagain      | fighter |       46 |      9 |
+| iwin           | fighter |       48 |      9 |
+| we             | fighter |       50 |     10 |
+| win            | fighter |       52 |     10 |
+| is             | fighter |       54 |     10 |
+| to             | fighter |       56 |     11 |
+| a              | fighter |       58 |     11 |
+| this           | fighter |       60 |     12 |
+| not            | fighter |       62 |     12 |
+| in             | fighter |       64 |     12 |
+| i              | fighter |       66 |     13 |
+| a              | fighter |       68 |     13 |
+| For            | fighter |       70 |     14 |
+| Just           | fighter |       72 |     14 |
++----------------+---------+----------+--------+
+37 rows in set (0.00 sec)
+
+ select distinct Team.Name as Team_Name from (select * from (select Name,Class,PlayerID,TeamID from Characters inner join Player on Characters.PlayerID = Player.ID) as newTable where class = 'fighter') as TeamTable inner join Team on Team.ID = TeamID; #Get the names of all of the teams that have the class 'fighters' on them.
++----------------------+
+| Team_Name            |
++----------------------+
+| Tigers               |
+| Badgers              |
+| Elite                |
+| Munkshots            |
+| Camshaft             |
+| OOMOO                |
+| Optic                |
+| Mesmer               |
+| Thievery Corporation |
+| XX                   |
+| Radiohead            |
+| Korn                 |
+| Murder by Death      |
+| Tunnel Snakes        |
+| Bottle Rockets       |
++----------------------+
+15 rows in set (0.00 sec)
+
+ select Team.Name as Team_Name,count(Team.Name) from (select * from (select Name,Class,PlayerID,TeamID from Characters inner join Player on Characters.PlayerID = Player.ID) as newTable where class = 'fighter') as TeamTable inner join Team on Team.ID = TeamID group by Team.Name; #Get the number of 'fighters' on each team that has them.
++----------------------+------------------+
+| Team_Name            | count(Team.Name) |
++----------------------+------------------+
+| Badgers              |                2 |
+| Bottle Rockets       |                2 |
+| Camshaft             |                3 |
+| Elite                |                3 |
+| Korn                 |                2 |
+| Mesmer               |                2 |
+| Munkshots            |                2 |
+| Murder by Death      |                3 |
+| OOMOO                |                2 |
+| Optic                |                3 |
+| Radiohead            |                3 |
+| Thievery Corporation |                3 |
+| Tigers               |                3 |
+| Tunnel Snakes        |                2 |
+| XX                   |                2 |
++----------------------+------------------+
+15 rows in set (0.00 sec)
+
+ select Team_Name from (select Team.Name as Team_Name,count(Team.Name) as team_count from (select * from (select Name,Class,PlayerID,TeamID from Characters inner join Player on Characters.PlayerID = Player.ID) as newTable where class = 'fighter') as TeamTable inner join Team on Team.ID = TeamID group by Team.Name having team_count = 3) as FCount; #Get the team names of the teams that have exactly 3 'fighters'.
++----------------------+
+| Team_Name            |
++----------------------+
+| Camshaft             |
+| Elite                |
+| Murder by Death      |
+| Optic                |
+| Radiohead            |
+| Thievery Corporation |
+| Tigers               |
++----------------------+
+7 rows in set (0.00 sec)
+
+ update Player set Email = 'fightingCosworth@email.com' where ID = 54; #Change the email for the player with ID of 54
+Query OK, 0 rows affected (0.08 sec)
+Rows matched: 1  Changed: 0  Warnings: 0
+
+ select * from Player where ID = 54; #Get the player with ID of 54 to check if previous update went through
++----+----------------------------+--------+
+| ID | Email                      | TeamID |
++----+----------------------------+--------+
+| 54 | fightingCosworth@email.com |     10 |
++----+----------------------------+--------+
+1 row in set (0.00 sec)
+
+ select * from Characters limit 10; #Get only 10 tuples from the Characters table.
++----+---------+---------+----------+
+| ID | Name    | class   | PlayerID |
++----+---------+---------+----------+
+|  0 | Frank   | fighter |        0 |
+|  1 | Sinatra | support |        1 |
+|  2 | Homer   | fighter |        2 |
+|  3 | Marge   | sniper  |        3 |
+|  4 | Lisa    | fighter |        4 |
+|  5 | Bart    | medic   |        5 |
+|  6 | Maggie  | fighter |        6 |
+|  7 | JD      | support |        7 |
+|  8 | Oscar   | fighter |        8 |
+|  9 | Sasha   | sniper  |        9 |
++----+---------+---------+----------+
+10 rows in set (0.00 sec)
+
+ select * from Organization where name like '%a_'; #Get all organizations that have an 'a' as the second to last letter.
++----+--------+------------+
+| ID | Name   | NumOfTeams |
++----+--------+------------+
+|  6 | Cobras |          1 |
++----+--------+------------+
+1 row in set (0.00 sec)
+
+ select * from CharacterStats where Kills between 400 and 500 order by kills; #Get all characters with kills between 400 and 500 and sort the result on Kills.
++------+------------+-------+--------+-------+--------+--------+
+| Rank | ShotsFired | Hits  | Misses | Kills | Deaths | CharID |
++------+------------+-------+--------+-------+--------+--------+
+|    5 |      32596 | 26817 |   5779 |   401 |    322 |     16 |
+|    5 |      14006 |  1226 |  12780 |   411 |    282 |     28 |
+|    2 |      51254 | 24901 |  26353 |   418 |    110 |     48 |
+|    1 |      59183 | 35764 |  23419 |   433 |     19 |      7 |
+|    4 |      15538 |  1413 |  14125 |   433 |    355 |     27 |
+|    5 |       3688 |   118 |   3570 |   438 |    455 |     72 |
+|    3 |      10264 |   746 |   9518 |   443 |      1 |     46 |
+|    2 |      27124 | 11108 |  16016 |   461 |    475 |      6 |
+|    0 |      59979 | 18715 |  41264 |   465 |    117 |     54 |
+|    5 |      18393 |  2486 |  15907 |   470 |    195 |      9 |
+|    1 |      28863 |  9120 |  19743 |   470 |    321 |     67 |
+|    1 |      60831 | 46265 |  14566 |   482 |     72 |     68 |
+|    3 |      65565 | 56861 |   8704 |   484 |    461 |     43 |
++------+------------+-------+--------+-------+--------+--------+
+13 rows in set (0.00 sec)
+
+ select Rank,Name as Char_Name,Class,Email from CharacterStats right join (Characters right join Player on Characters.PlayerID = Player.ID) on CharacterStats.CharID = Characters.ID; #Get the Rank, Name, and class of a character, as well as the email of the player the character belongs to using a right outer join.
++------+----------------+---------+----------------------------+
+| Rank | Char_Name      | Class   | Email                      |
++------+----------------+---------+----------------------------+
+|    4 | Frank          | fighter | 10000062jamse@email.com    |
+|    5 | Sinatra        | support | 1@email.com                |
+|    1 | Homer          | fighter | 2@email.com                |
+|    4 | Marge          | sniper  | 3@email.com                |
+|    0 | Lisa           | fighter | 4@email.com                |
+|    0 | Bart           | medic   | 15@email.com               |
+|    2 | Maggie         | fighter | 16@email.com               |
+|    1 | JD             | support | 17@email.com               |
+|    2 | Oscar          | fighter | 18@email.com               |
+|    5 | Sasha          | sniper  | 19@email.com               |
+|    3 | Boomer         | fighter | 10@email.com               |
+|    0 | Max            | support | 111@email.com              |
+|    5 | Sadie          | fighter | 112@email.com              |
+|    4 | Leo            | support | 113@email.com              |
+|    2 | Karla          | fighter | 114@email.com              |
+|    4 | Jon            | sniper  | 115@email.com              |
+|    5 | Rachel         | fighter | 116@email.com              |
+|    1 | Mark           | support | 117@email.com              |
+|    1 | Torie          | fighter | 118@email.com              |
+|    4 | Kay            | support | 119@email.com              |
+|    0 | Andy           | fighter | 120@email.com              |
+|    5 | Dylan          | sniper  | 121@email.com              |
+|    2 | Cody           | fighter | 122@email.com              |
+|    1 | Orf            | support | 123@email.com              |
+|    2 | Tyler          | fighter | 152@email.com              |
+|    2 | Frankfurter    | medic   | 125@email.com              |
+|    2 | Munster        | fighter | 126@email.com              |
+|    4 | Cheeeee        | sniper  | 117@email.com              |
+|    5 | Wacko          | fighter | 128@email.com              |
+|    2 | Yacko          | support | 129@email.com              |
+|    3 | Dot            | fighter | 130@email.com              |
+|    5 | Einstein       | support | 131@email.com              |
+|    1 | Munch          | fighter | 132@email.com              |
+|    5 | Keepsake       | sniper  | 133@email.com              |
+|    3 | wannabe        | fighter | 134@email.com              |
+|    5 | medicguy       | medic   | 135@email.com              |
+|    2 | figherguy      | fighter | 136@email.com              |
+|    3 | supportguy     | support | 137@email.com              |
+|    4 | notfighterguy  | fighter | 138@email.com              |
+|    4 | sniperguy      | sniper  | 139@email.com              |
+|    5 | notsniperguy   | fighter | 140@email.com              |
+|    4 | notsupportguy  | support | 141@email.com              |
+|    5 | compost        | fighter | 142@email.com              |
+|    3 | pyle           | support | 143@email.com              |
+|    1 | monkeybusiness | fighter | 144@email.com              |
+|    1 | campground     | sniper  | 145@email.com              |
+|    3 | comeagain      | fighter | 146@email.com              |
+|    3 | ohnoes         | support | 147@email.com              |
+|    2 | iwin           | fighter | 148@email.com              |
+|    5 | uwin           | support | 149@email.com              |
+|    5 | we             | fighter | 152@email.com              |
+|    1 | all            | sniper  | 151@email.com              |
+|    3 | win            | fighter | 152@email.com              |
+|    5 | this           | support | 153@email.com              |
+|    0 | is             | fighter | fightingCosworth@email.com |
+|    1 | supposed       | medic   | 155@email.com              |
+|    3 | to             | fighter | 56@email.com               |
+|    2 | be             | sniper  | 57@email.com               |
+|    5 | a              | fighter | 58@email.com               |
+|    0 | name           | support | 59@email.com               |
+|    0 | this           | fighter | 60@email.com               |
+|    5 | could          | support | 61@email.com               |
+|    5 | not            | fighter | 62@email.com               |
+|    0 | be             | sniper  | 63@email.com               |
+|    5 | in             | fighter | 64@email.com               |
+|    3 | order          | medic   | 65@email.com               |
+|    4 | i              | fighter | 66@email.com               |
+|    1 | Wrote          | support | 67@email.com               |
+|    1 | a              | fighter | 68@email.com               |
+|    1 | Program        | sniper  | 69@email.com               |
+|    1 | For            | fighter | 70@email.com               |
+|    0 | This           | support | 71@email.com               |
+|    5 | Just           | fighter | 72@email.com               |
+|    2 | A              | support | 73@email.com               |
+| NULL | NULL           | NULL    | 74@email.com               |
++------+----------------+---------+----------------------------+
+75 rows in set (0.00 sec)
+
+ select Name,Hits,Misses from Characters left join (CharGenerates left join CharacterStats on CharGenerates.ID = CharacterStats.CharID) on Characters.ID = CharacterStats.CharID; #Get all Characters Name, number of hits, and number of misses using a left join with the CharacterStats and Characters tables.
++----------------+-------+--------+
+| Name           | Hits  | Misses |
++----------------+-------+--------+
+| Frank          | 10280 |   3574 |
+| Sinatra        | 16166 |  36582 |
+| Homer          |  7839 |   6446 |
+| Marge          | 16742 |   4479 |
+| Lisa           |  7374 |    715 |
+| Bart           |  4836 |  33429 |
+| Maggie         | 11108 |  16016 |
+| JD             | 35764 |  23419 |
+| Oscar          | 32502 |  16046 |
+| Sasha          |  2486 |  15907 |
+| Boomer         |  8222 |   8667 |
+| Max            |  2837 |  32549 |
+| Sadie          |  2759 |   2406 |
+| Leo            | 47508 |   5651 |
+| Karla          | 31420 |  31970 |
+| Jon            | 26164 |   2619 |
+| Rachel         | 26817 |   5779 |
+| Mark           | 16814 |  24734 |
+| Torie          |   398 |  22016 |
+| Kay            |  4647 |  34216 |
+| Andy           |  5963 |  23054 |
+| Dylan          | 25072 |   7975 |
+| Cody           | 20093 |   3922 |
+| Orf            |    20 |  32301 |
+| Tyler          | 25412 |  34918 |
+| Frankfurter    | 12757 |  10217 |
+| Munster        |  6773 |  33726 |
+| Cheeeee        |  1413 |  14125 |
+| Wacko          |  1226 |  12780 |
+| Yacko          |   928 |  14723 |
+| Dot            | 36354 |   7777 |
+| Einstein       |  6548 |  17263 |
+| Munch          |  2941 |  43452 |
+| Keepsake       | 17841 |   7522 |
+| wannabe        |  6875 |  39591 |
+| medicguy       | 11089 |  48437 |
+| figherguy      |   977 |  59583 |
+| supportguy     | 24274 |  32580 |
+| notfighterguy  | 21758 |  13285 |
+| sniperguy      |  3903 |   6377 |
+| notsniperguy   |   121 |   1569 |
+| notsupportguy  |  4809 |  43959 |
+| compost        | 44660 |  15132 |
+| pyle           | 56861 |   8704 |
+| monkeybusiness | 17619 |   3748 |
+| campground     | 24457 |  39437 |
+| comeagain      |   746 |   9518 |
+| ohnoes         | 12565 |  18802 |
+| iwin           | 24901 |  26353 |
+| uwin           |  6025 |   8400 |
+| we             | 19643 |   4213 |
+| all            | 16786 |  31902 |
+| win            | 18912 |  27519 |
+| this           | 10547 |  12108 |
+| is             | 18715 |  41264 |
+| supposed       |  3332 |  22976 |
+| to             | 13050 |   8305 |
+| be             | 31819 |   3837 |
+| a              | 20118 |   5444 |
+| name           |  1222 |  10618 |
+| this           | 28895 |  12908 |
+| could          |  9494 |  18314 |
+| not            |  2823 |  12261 |
+| be             | 22880 |  17382 |
+| in             | 16054 |  22557 |
+| order          | 28227 |   8864 |
+| i              |  2211 |  61961 |
+| Wrote          |  9120 |  19743 |
+| a              | 46265 |  14566 |
+| Program        | 25954 |  18620 |
+| For            |  2848 |  12357 |
+| This           |  8994 |    407 |
+| Just           |   118 |   3570 |
+| A              |   607 |    403 |
++----------------+-------+--------+
+74 rows in set (0.00 sec)
+
+ delete from Characters where ID = 74; #Remove the character with id 74.
+Query OK, 0 rows affected (0.00 sec)
+
+ select * from Team where ID not between 0 and 7; #Get Teams with id greater than 7.
++----+----------------------+-------+
+| ID | Name                 | OrgID |
++----+----------------------+-------+
+|  8 | Thievery Corporation |     1 |
+|  9 | XX                   |     3 |
+| 10 | Radiohead            |     7 |
+| 11 | Korn                 |     1 |
+| 12 | Murder by Death      |     2 |
+| 13 | Tunnel Snakes        |     7 |
+| 14 | Bottle Rockets       |     0 |
++----+----------------------+-------+
+7 rows in set (0.00 sec)
+
+ select max(OrgCount) as Highest_Teams from (select count(OrgID) as OrgCount from Team group by OrgID) as counting; #Get the Highest number of teams for a single organization.
++---------------+
+| Highest_Teams |
++---------------+
+|             3 |
++---------------+
+1 row in set (0.00 sec)
+
+ select * from Team right join Player on Player.TeamID = Team.ID; #Join the Team and Player tables together with all data from the Player Table.
++------+----------------------+-------+----+----------------------------+--------+
+| ID   | Name                 | OrgID | ID | Email                      | TeamID |
++------+----------------------+-------+----+----------------------------+--------+
+|    0 | Tigers               |     9 |  0 | 10000062jamse@email.com    |      0 |
+|    0 | Tigers               |     9 |  1 | 1@email.com                |      0 |
+|    0 | Tigers               |     9 |  2 | 2@email.com                |      0 |
+|    0 | Tigers               |     9 |  3 | 3@email.com                |      0 |
+|    0 | Tigers               |     9 |  4 | 4@email.com                |      0 |
+|    1 | Badgers              |     4 |  5 | 15@email.com               |      1 |
+|    1 | Badgers              |     4 |  6 | 16@email.com               |      1 |
+|    1 | Badgers              |     4 |  7 | 17@email.com               |      1 |
+|    1 | Badgers              |     4 |  8 | 18@email.com               |      1 |
+|    1 | Badgers              |     4 |  9 | 19@email.com               |      1 |
+|    2 | Elite                |     6 | 10 | 10@email.com               |      2 |
+|    2 | Elite                |     6 | 11 | 111@email.com              |      2 |
+|    2 | Elite                |     6 | 12 | 112@email.com              |      2 |
+|    2 | Elite                |     6 | 13 | 113@email.com              |      2 |
+|    2 | Elite                |     6 | 14 | 114@email.com              |      2 |
+|    3 | Munkshots            |     5 | 15 | 115@email.com              |      3 |
+|    3 | Munkshots            |     5 | 16 | 116@email.com              |      3 |
+|    3 | Munkshots            |     5 | 17 | 117@email.com              |      3 |
+|    3 | Munkshots            |     5 | 18 | 118@email.com              |      3 |
+|    3 | Munkshots            |     5 | 19 | 119@email.com              |      3 |
+|    4 | Camshaft             |     8 | 20 | 120@email.com              |      4 |
+|    4 | Camshaft             |     8 | 21 | 121@email.com              |      4 |
+|    4 | Camshaft             |     8 | 22 | 122@email.com              |      4 |
+|    4 | Camshaft             |     8 | 23 | 123@email.com              |      4 |
+|    4 | Camshaft             |     8 | 24 | 152@email.com              |      4 |
+|    5 | OOMOO                |     0 | 25 | 125@email.com              |      5 |
+|    5 | OOMOO                |     0 | 26 | 126@email.com              |      5 |
+|    5 | OOMOO                |     0 | 27 | 117@email.com              |      5 |
+|    5 | OOMOO                |     0 | 28 | 128@email.com              |      5 |
+|    5 | OOMOO                |     0 | 29 | 129@email.com              |      5 |
+|    6 | Optic                |     8 | 30 | 130@email.com              |      6 |
+|    6 | Optic                |     8 | 31 | 131@email.com              |      6 |
+|    6 | Optic                |     8 | 32 | 132@email.com              |      6 |
+|    6 | Optic                |     8 | 33 | 133@email.com              |      6 |
+|    6 | Optic                |     8 | 34 | 134@email.com              |      6 |
+|    7 | Mesmer               |     7 | 35 | 135@email.com              |      7 |
+|    7 | Mesmer               |     7 | 36 | 136@email.com              |      7 |
+|    7 | Mesmer               |     7 | 37 | 137@email.com              |      7 |
+|    7 | Mesmer               |     7 | 38 | 138@email.com              |      7 |
+|    7 | Mesmer               |     7 | 39 | 139@email.com              |      7 |
+|    8 | Thievery Corporation |     1 | 40 | 140@email.com              |      8 |
+|    8 | Thievery Corporation |     1 | 41 | 141@email.com              |      8 |
+|    8 | Thievery Corporation |     1 | 42 | 142@email.com              |      8 |
+|    8 | Thievery Corporation |     1 | 43 | 143@email.com              |      8 |
+|    8 | Thievery Corporation |     1 | 44 | 144@email.com              |      8 |
+|    9 | XX                   |     3 | 45 | 145@email.com              |      9 |
+|    9 | XX                   |     3 | 46 | 146@email.com              |      9 |
+|    9 | XX                   |     3 | 47 | 147@email.com              |      9 |
+|    9 | XX                   |     3 | 48 | 148@email.com              |      9 |
+|    9 | XX                   |     3 | 49 | 149@email.com              |      9 |
+|   10 | Radiohead            |     7 | 50 | 152@email.com              |     10 |
+|   10 | Radiohead            |     7 | 51 | 151@email.com              |     10 |
+|   10 | Radiohead            |     7 | 52 | 152@email.com              |     10 |
+|   10 | Radiohead            |     7 | 53 | 153@email.com              |     10 |
+|   10 | Radiohead            |     7 | 54 | fightingCosworth@email.com |     10 |
+|   11 | Korn                 |     1 | 55 | 155@email.com              |     11 |
+|   11 | Korn                 |     1 | 56 | 56@email.com               |     11 |
+|   11 | Korn                 |     1 | 57 | 57@email.com               |     11 |
+|   11 | Korn                 |     1 | 58 | 58@email.com               |     11 |
+|   11 | Korn                 |     1 | 59 | 59@email.com               |     11 |
+|   12 | Murder by Death      |     2 | 60 | 60@email.com               |     12 |
+|   12 | Murder by Death      |     2 | 61 | 61@email.com               |     12 |
+|   12 | Murder by Death      |     2 | 62 | 62@email.com               |     12 |
+|   12 | Murder by Death      |     2 | 63 | 63@email.com               |     12 |
+|   12 | Murder by Death      |     2 | 64 | 64@email.com               |     12 |
+|   13 | Tunnel Snakes        |     7 | 65 | 65@email.com               |     13 |
+|   13 | Tunnel Snakes        |     7 | 66 | 66@email.com               |     13 |
+|   13 | Tunnel Snakes        |     7 | 67 | 67@email.com               |     13 |
+|   13 | Tunnel Snakes        |     7 | 68 | 68@email.com               |     13 |
+|   13 | Tunnel Snakes        |     7 | 69 | 69@email.com               |     13 |
+|   14 | Bottle Rockets       |     0 | 70 | 70@email.com               |     14 |
+|   14 | Bottle Rockets       |     0 | 71 | 71@email.com               |     14 |
+|   14 | Bottle Rockets       |     0 | 72 | 72@email.com               |     14 |
+|   14 | Bottle Rockets       |     0 | 73 | 73@email.com               |     14 |
+|   14 | Bottle Rockets       |     0 | 74 | 74@email.com               |     14 |
++------+----------------------+-------+----+----------------------------+--------+
+75 rows in set (0.00 sec)
+
+select * from Player right join (Team right join Organization on Team.OrgID = Organization.ID) on Player.TeamID = Team.ID; #Get all data from the Player, Team, and Organization tables.
++------+----------------------------+--------+------+----------------------+-------+----+------------+------------+
+| ID   | Email                      | TeamID | ID   | Name                 | OrgID | ID | Name       | NumOfTeams |
++------+----------------------------+--------+------+----------------------+-------+----+------------+------------+
+|   25 | 125@email.com              |      5 |    5 | OOMOO                |     0 |  0 | Fuzzies    |          2 |
+|   26 | 126@email.com              |      5 |    5 | OOMOO                |     0 |  0 | Fuzzies    |          2 |
+|   27 | 117@email.com              |      5 |    5 | OOMOO                |     0 |  0 | Fuzzies    |          2 |
+|   28 | 128@email.com              |      5 |    5 | OOMOO                |     0 |  0 | Fuzzies    |          2 |
+|   29 | 129@email.com              |      5 |    5 | OOMOO                |     0 |  0 | Fuzzies    |          2 |
+|   70 | 70@email.com               |     14 |   14 | Bottle Rockets       |     0 |  0 | Fuzzies    |          2 |
+|   71 | 71@email.com               |     14 |   14 | Bottle Rockets       |     0 |  0 | Fuzzies    |          2 |
+|   72 | 72@email.com               |     14 |   14 | Bottle Rockets       |     0 |  0 | Fuzzies    |          2 |
+|   73 | 73@email.com               |     14 |   14 | Bottle Rockets       |     0 |  0 | Fuzzies    |          2 |
+|   74 | 74@email.com               |     14 |   14 | Bottle Rockets       |     0 |  0 | Fuzzies    |          2 |
+|   40 | 140@email.com              |      8 |    8 | Thievery Corporation |     1 |  1 | Beekers    |          2 |
+|   41 | 141@email.com              |      8 |    8 | Thievery Corporation |     1 |  1 | Beekers    |          2 |
+|   42 | 142@email.com              |      8 |    8 | Thievery Corporation |     1 |  1 | Beekers    |          2 |
+|   43 | 143@email.com              |      8 |    8 | Thievery Corporation |     1 |  1 | Beekers    |          2 |
+|   44 | 144@email.com              |      8 |    8 | Thievery Corporation |     1 |  1 | Beekers    |          2 |
+|   55 | 155@email.com              |     11 |   11 | Korn                 |     1 |  1 | Beekers    |          2 |
+|   56 | 56@email.com               |     11 |   11 | Korn                 |     1 |  1 | Beekers    |          2 |
+|   57 | 57@email.com               |     11 |   11 | Korn                 |     1 |  1 | Beekers    |          2 |
+|   58 | 58@email.com               |     11 |   11 | Korn                 |     1 |  1 | Beekers    |          2 |
+|   59 | 59@email.com               |     11 |   11 | Korn                 |     1 |  1 | Beekers    |          2 |
+|   60 | 60@email.com               |     12 |   12 | Murder by Death      |     2 |  2 | NOMS       |          1 |
+|   61 | 61@email.com               |     12 |   12 | Murder by Death      |     2 |  2 | NOMS       |          1 |
+|   62 | 62@email.com               |     12 |   12 | Murder by Death      |     2 |  2 | NOMS       |          1 |
+|   63 | 63@email.com               |     12 |   12 | Murder by Death      |     2 |  2 | NOMS       |          1 |
+|   64 | 64@email.com               |     12 |   12 | Murder by Death      |     2 |  2 | NOMS       |          1 |
+|   45 | 145@email.com              |      9 |    9 | XX                   |     3 |  3 | Orfs       |          1 |
+|   46 | 146@email.com              |      9 |    9 | XX                   |     3 |  3 | Orfs       |          1 |
+|   47 | 147@email.com              |      9 |    9 | XX                   |     3 |  3 | Orfs       |          1 |
+|   48 | 148@email.com              |      9 |    9 | XX                   |     3 |  3 | Orfs       |          1 |
+|   49 | 149@email.com              |      9 |    9 | XX                   |     3 |  3 | Orfs       |          1 |
+|    5 | 15@email.com               |      1 |    1 | Badgers              |     4 |  4 | BreakNecks |          1 |
+|    6 | 16@email.com               |      1 |    1 | Badgers              |     4 |  4 | BreakNecks |          1 |
+|    7 | 17@email.com               |      1 |    1 | Badgers              |     4 |  4 | BreakNecks |          1 |
+|    8 | 18@email.com               |      1 |    1 | Badgers              |     4 |  4 | BreakNecks |          1 |
+|    9 | 19@email.com               |      1 |    1 | Badgers              |     4 |  4 | BreakNecks |          1 |
+|   15 | 115@email.com              |      3 |    3 | Munkshots            |     5 |  5 | Bears      |          1 |
+|   16 | 116@email.com              |      3 |    3 | Munkshots            |     5 |  5 | Bears      |          1 |
+|   17 | 117@email.com              |      3 |    3 | Munkshots            |     5 |  5 | Bears      |          1 |
+|   18 | 118@email.com              |      3 |    3 | Munkshots            |     5 |  5 | Bears      |          1 |
+|   19 | 119@email.com              |      3 |    3 | Munkshots            |     5 |  5 | Bears      |          1 |
+|   10 | 10@email.com               |      2 |    2 | Elite                |     6 |  6 | Cobras     |          1 |
+|   11 | 111@email.com              |      2 |    2 | Elite                |     6 |  6 | Cobras     |          1 |
+|   12 | 112@email.com              |      2 |    2 | Elite                |     6 |  6 | Cobras     |          1 |
+|   13 | 113@email.com              |      2 |    2 | Elite                |     6 |  6 | Cobras     |          1 |
+|   14 | 114@email.com              |      2 |    2 | Elite                |     6 |  6 | Cobras     |          1 |
+|   35 | 135@email.com              |      7 |    7 | Mesmer               |     7 |  7 | Wendigos   |          3 |
+|   36 | 136@email.com              |      7 |    7 | Mesmer               |     7 |  7 | Wendigos   |          3 |
+|   37 | 137@email.com              |      7 |    7 | Mesmer               |     7 |  7 | Wendigos   |          3 |
+|   38 | 138@email.com              |      7 |    7 | Mesmer               |     7 |  7 | Wendigos   |          3 |
+|   39 | 139@email.com              |      7 |    7 | Mesmer               |     7 |  7 | Wendigos   |          3 |
+|   50 | 152@email.com              |     10 |   10 | Radiohead            |     7 |  7 | Wendigos   |          3 |
+|   51 | 151@email.com              |     10 |   10 | Radiohead            |     7 |  7 | Wendigos   |          3 |
+|   52 | 152@email.com              |     10 |   10 | Radiohead            |     7 |  7 | Wendigos   |          3 |
+|   53 | 153@email.com              |     10 |   10 | Radiohead            |     7 |  7 | Wendigos   |          3 |
+|   54 | fightingCosworth@email.com |     10 |   10 | Radiohead            |     7 |  7 | Wendigos   |          3 |
+|   65 | 65@email.com               |     13 |   13 | Tunnel Snakes        |     7 |  7 | Wendigos   |          3 |
+|   66 | 66@email.com               |     13 |   13 | Tunnel Snakes        |     7 |  7 | Wendigos   |          3 |
+|   67 | 67@email.com               |     13 |   13 | Tunnel Snakes        |     7 |  7 | Wendigos   |          3 |
+|   68 | 68@email.com               |     13 |   13 | Tunnel Snakes        |     7 |  7 | Wendigos   |          3 |
+|   69 | 69@email.com               |     13 |   13 | Tunnel Snakes        |     7 |  7 | Wendigos   |          3 |
+|   20 | 120@email.com              |      4 |    4 | Camshaft             |     8 |  8 | Dingos     |          2 |
+|   21 | 121@email.com              |      4 |    4 | Camshaft             |     8 |  8 | Dingos     |          2 |
+|   22 | 122@email.com              |      4 |    4 | Camshaft             |     8 |  8 | Dingos     |          2 |
+|   23 | 123@email.com              |      4 |    4 | Camshaft             |     8 |  8 | Dingos     |          2 |
+|   24 | 152@email.com              |      4 |    4 | Camshaft             |     8 |  8 | Dingos     |          2 |
+|   30 | 130@email.com              |      6 |    6 | Optic                |     8 |  8 | Dingos     |          2 |
+|   31 | 131@email.com              |      6 |    6 | Optic                |     8 |  8 | Dingos     |          2 |
+|   32 | 132@email.com              |      6 |    6 | Optic                |     8 |  8 | Dingos     |          2 |
+|   33 | 133@email.com              |      6 |    6 | Optic                |     8 |  8 | Dingos     |          2 |
+|   34 | 134@email.com              |      6 |    6 | Optic                |     8 |  8 | Dingos     |          2 |
+|    0 | 10000062jamse@email.com    |      0 |    0 | Tigers               |     9 |  9 | Mossly     |          1 |
+|    1 | 1@email.com                |      0 |    0 | Tigers               |     9 |  9 | Mossly     |          1 |
+|    2 | 2@email.com                |      0 |    0 | Tigers               |     9 |  9 | Mossly     |          1 |
+|    3 | 3@email.com                |      0 |    0 | Tigers               |     9 |  9 | Mossly     |          1 |
+|    4 | 4@email.com                |      0 |    0 | Tigers               |     9 |  9 | Mossly     |          1 |
++------+----------------------------+--------+------+----------------------+-------+----+------------+------------+
+75 rows in set (0.00 sec)
+
+#Specification from phase 1:
+create table Organization (
+  ID int primary key,
+  Name varchar(50),
+  NumOfTeams int
+);
+
+create table Team (
+  ID int primary key,
+  Name varchar(50),
+  OrgID int,
+  constraint fk_team foreign key (OrgID)
+  references organization(ID)
+);
+
+create table Player (
+  ID int key,
+  Email varchar(50),
+  TeamID int,
+  constraint fk_player foreign key (TeamID)
+  references team(ID)
+);
+
+create table OrgStats (
+  Rank int,
+  CreateDate date,
+  OrgID int,
+  constraint fk_stats foreign key (OrgID)
+  references organization(ID)
+);
+
+create table TeamStats (
+  Rank int,
+  MatchesWon int,
+  MatchesLost int,
+  TeamID int,
+  constraint fk_team foreign key (teamID)
+  references team(ID)
+);
+
+
+
+
+create table PlayerStats (
+  Rank int,
+  CreateDate date,
+  PlayerID int,
+  constraint fk_player foreign key (PlayerID)
+  references player(ID)
+);
+
+create table Characters (
+  ID int primary key,
+  Name varchar(50),
+  class varchar(15),
+  PlayerID int,
+  constraint fk_player foreign key (PlayerID)
+  references player(ID)
+);
+
+create table CharacterStats(
+  Rank int,
+  ShotsFired int,
+  Hits int,
+  Misses int,
+  Kills int,
+  Deaths int,
+  CharID int,
+  constraint fk_char foreign key (charID)
+  references characters(ID)
+);
+
+create table Game (
+  team1ID int,
+  Team2ID int,
+  WinnerID int,
+  constraint fk_team foreign key (team1ID)
+  references team(ID)
+);
+
+#For this phase I added tables for the relationships that I forgot to add in the first phase.
+#I also moved the foreign key constraints to be their own queries. I did this to make it more obvious what
+#the constraints are and to show off the alter table queries.
