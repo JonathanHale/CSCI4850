@@ -5,6 +5,10 @@ the team name will be displayed along with the ID, Email, and Team ID associated
 
 The create.php will create a new entry in the player table based on user input.
 
+The update.php will update the character name of the character with the ID given by user input.
+
+The delete.php will delete the character with the ID given by user input.
+
 Explain Triggers:
 The first trigger was created to make sure the number of teams an organization has is incremented when an team is created for that org.
 The second trigger was created to delete from the created table when a character is deleted. The created table is a table showing which player created which characters.

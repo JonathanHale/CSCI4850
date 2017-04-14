@@ -7,7 +7,7 @@
     <input type="number" name="player_id" id="player_id">
     <br/>
 
-    <label for="search">search</label>
+    <label for="search">search:</label>
     <input type="submit" name="search" id="search">
     <br/>
 
